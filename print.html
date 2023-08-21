@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js ayu">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Assembly Lang</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="Assembly Learning.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">ABOUT Assembly</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="8086-assembly/index.html"><strong aria-hidden="true">1.</strong> Knowledge</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="8086-assembly/01基础知识.html"><strong aria-hidden="true">1.1.</strong> ch1</a></li><li class="chapter-item expanded "><a href="8086-assembly/02寄存器.html"><strong aria-hidden="true">1.2.</strong> ch2</a></li><li class="chapter-item expanded "><a href="8086-assembly/03寄存器.html"><strong aria-hidden="true">1.3.</strong> ch3</a></li><li class="chapter-item expanded "><a href="8086-assembly/04第一个程序.html"><strong aria-hidden="true">1.4.</strong> ch4</a></li><li class="chapter-item expanded "><a href="8086-assembly/05[BX]和loop.html"><strong aria-hidden="true">1.5.</strong> ch5</a></li><li class="chapter-item expanded "><a href="8086-assembly/06段.html"><strong aria-hidden="true">1.6.</strong> ch6</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Assembly Lang</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/TephrocactusMYC/Assembly-WANGSHAUNG" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="汇编语言学习"><a class="header" href="#汇编语言学习">汇编语言学习</a></h1>
+<p>内容主要来自于王爽的《汇编语言》第四版。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="8086汇编语言学习"><a class="header" href="#8086汇编语言学习">8086汇编语言学习</a></h1>
+<p>[视频【8086汇编语言精讲】]（https://www.bilibili.com/video/BV1CJ411D7yD/?share_source=copy_web&amp;vd_source=89fdd6c33222facf5d82736180e256cc),是B站的一个教学</p>
+<p>配套王爽的《汇编语言》第四版。</p>
+<p><a href="https://www.bilibili.com/video/BV1mt411R7Xv/?share_source=copy_web&amp;vd_source=89fdd6c33222facf5d82736180e256cc">B站编程讲解【汇编语言从0开始 重制版 自学必备(配套王爽汇编语言第三版或第四版)】</a></p>
+<p><a href="https://blog.csdn.net/Dueser/article/details/120970387">CSDN一个人的课后解答</a></p>
+<p><a href="https://blog.csdn.net/weixin_43362650/article/details/117305075">CSDN上一个人第三版的实验</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="视频"><a class="header" href="#视频">视频</a></h1>
+<h2 id="从机器语言到汇编语言"><a class="header" href="#从机器语言到汇编语言">从机器语言到汇编语言</a></h2>
+<p>机器语言，过于繁琐和难以编写。</p>
+<h2 id="汇编是什么"><a class="header" href="#汇编是什么">汇编是什么？</a></h2>
+<p>实际上就是机器语言的助记符，给机器码起不同的有意义的名字</p>
+<h2 id="汇编语言的组成"><a class="header" href="#汇编语言的组成">汇编语言的组成</a></h2>
+<ol>
+<li>汇编指令（核心）：机器码的助记符，有对应的机器码</li>
+<li>伪指令：没有对应的机器码，计算机并不执行，由编译器执行</li>
+<li>其他符号，由编译器识别，没有对应的机器码</li>
+</ol>
+<h2 id="cpu寄存器与内存"><a class="header" href="#cpu寄存器与内存">CPU、寄存器与内存</a></h2>
+<p>CPU负责运算和指令执行</p>
+<p>内存帮助CPU读取存储数据，CPU通过寻址来访问内存，进行数据读写</p>
+<p>为了效率，寄存器充当暂存</p>
+<h2 id="内存之中存什么"><a class="header" href="#内存之中存什么">内存之中存什么</a></h2>
+<p>指令和数据都有
+<img src="8086-assembly/image-1.png" alt="Alt text" /></p>
+<h2 id="存储单元"><a class="header" href="#存储单元">存储单元</a></h2>
+<p>存储器被划分为若干个存储单元，每个存1Byte</p>
+<h2 id="cpu对存储器的读写"><a class="header" href="#cpu对存储器的读写">CPU对存储器的读写</a></h2>
+<p>存储单元被按顺序编号，编号就是地址</p>
+<p>CPU要从内存中读取数据，就需要地址</p>
+<p>因此需要三种信息：</p>
+<ul>
+<li>地址信息</li>
+<li>控制信息</li>
+<li>数据信息</li>
+</ul>
+<h2 id="小结"><a class="header" href="#小结">小结</a></h2>
+<p>汇编指令和机器指令一一对应，每一种CPU都有自己的汇编指令集</p>
+<h2 id="扩展知识"><a class="header" href="#扩展知识">扩展知识</a></h2>
+<p>大部分为计组的内容。</p>
+<h1 id="书"><a class="header" href="#书">书</a></h1>
+<p><img src="8086-assembly/image.png" alt="Alt text" /></p>
+<h2 id="总线"><a class="header" href="#总线">总线</a></h2>
+<p>需要知道地址总线、数据总线、控制总线，其宽度对应的内容。</p>
+<h2 id="检测点11"><a class="header" href="#检测点11">检测点1.1</a></h2>
+<ol>
+<li>$1KB=1024*8 bit=2^{13} bit$, 宽度为13</li>
+<li>1024，0-1023</li>
+<li>8192，1024</li>
+<li>$2^{30},2^{20},2^{10}$</li>
+<li>64,1,16,4</li>
+<li>1,1,2,4</li>
+<li>512,256</li>
+<li>二进制</li>
+</ol>
+<h2 id="其他"><a class="header" href="#其他">其他</a></h2>
+<p>后面还有一些OS的知识，学过的应该不需要再看了</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="内容"><a class="header" href="#内容">内容</a></h1>
+<h2 id="寄存器"><a class="header" href="#寄存器">寄存器</a></h2>
+<p>8086由十四个寄存器</p>
+<h2 id="通用寄存器"><a class="header" href="#通用寄存器">通用寄存器</a></h2>
+<p>AX BX CX DX</p>
+<p>用于存放一般性数据</p>
+<p>都是16位的，但又分为高八位和第八位</p>
+<p>比如AX分为AH和AL
+<img src="8086-assembly/image-2.png" alt="Alt text" />
+以下的区分只要是为了向下兼容
+<img src="8086-assembly/image-3.png" alt="Alt text" /></p>
+<h2 id="指令"><a class="header" href="#指令">指令</a></h2>
+<p><img src="8086-assembly/image-4.png" alt="Alt text" />
+这里需要记住位的概念
+<img src="8086-assembly/image-5.png" alt="例子" />
+比如上面这个例子，是怎么计算的</p>
+<p>然后还需要知道，AL和AH之间也不互相影响
+<img src="8086-assembly/image-6.png" alt="Alt text" /></p>
+<h2 id="操作对象一致性"><a class="header" href="#操作对象一致性">操作对象一致性</a></h2>
+<p><img src="8086-assembly/image-7.png" alt="Alt text" />
+这里对于初学者需要特别注意</p>
+<h2 id="监测点21"><a class="header" href="#监测点21">监测点2.1</a></h2>
+<ol>
+<li></li>
+</ol>
+<div class="table-wrapper"><table><thead><tr><th>题</th><th>答案</th></tr></thead><tbody>
+<tr><td>mov ax,62627</td><td>AX=F4A3H</td></tr>
+<tr><td>mov ah,31H</td><td>AX=31A3H</td></tr>
+<tr><td>mov al,23H</td><td>AX=3123H</td></tr>
+<tr><td>add ax,ax</td><td>AX=6246H</td></tr>
+<tr><td>mov bx,826CH</td><td>BX=826CH</td></tr>
+<tr><td>mov cx,ax</td><td>CX=6246H</td></tr>
+<tr><td>mov ax,bx</td><td>AX=826CH</td></tr>
+<tr><td>add ax,bx</td><td>AX=04D8H</td></tr>
+<tr><td>mov al,bh</td><td>AX=0482H</td></tr>
+<tr><td>mov ah,bl</td><td>AX=6C82H</td></tr>
+<tr><td>add ah,ah</td><td>AX=D882H</td></tr>
+<tr><td>add al,6</td><td>AX=D888H</td></tr>
+<tr><td>add al,al</td><td>AX=D810H</td></tr>
+<tr><td>mov ax,cx</td><td>AX=6246H</td></tr>
+<tr><td>2.</td><td></td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-8086 assembly">mov ax,2H
+add ax,ax
+add ax,ax
+add ax,ax
+</code></pre>
+<h2 id="物理地址"><a class="header" href="#物理地址">物理地址</a></h2>
+<p>唯一的地址是物理地址</p>
+<p><img src="8086-assembly/image-8.png" alt="Alt text" /></p>
+<h2 id="段地址偏移地址"><a class="header" href="#段地址偏移地址">段地址、偏移地址</a></h2>
+<p>都是16位，最后合成20位
+<img src="8086-assembly/image-9.png" alt="Alt text" />
+段地址*16+偏移地址=物理地址</p>
+<h3 id="段的理解"><a class="header" href="#段的理解">段的理解</a></h3>
+<p>并没有真正的段</p>
+<p>同时，一个段最大是64KB</p>
+<h2 id="监测点22"><a class="header" href="#监测点22">监测点2.2</a></h2>
+<ol>
+<li>10H到1000H</li>
+<li>1001H 2000H</li>
+<li>小于1001H或者大于2000H即可</li>
+</ol>
+<h2 id="段寄存器"><a class="header" href="#段寄存器">段寄存器</a></h2>
+<p>CS DS SS ES</p>
+<h3 id="cs-ip"><a class="header" href="#cs-ip">CS IP</a></h3>
+<p>CS是段寄存器</p>
+<p>8086有四个段寄存器：CS DS SS ES</p>
+<p>CS是代码段寄存器，IP为指令指针寄存器（偏移地址），组合起来是CPU要执行的指令的地址</p>
+<p>CS:IP指向的内容当作当前指令执行</p>
+<h4 id="工作流程"><a class="header" href="#工作流程">工作流程</a></h4>
+<ol>
+<li>从 CS:IP 指向的内存单元读取指令，读取的指令进入指令缓冲器:</li>
+<li>IP=IP+所读取指令的长度，从而指向下一条指令</li>
+<li>执行指令。转到步骤(1)，重复这个过程。</li>
+</ol>
+<h4 id="改变值"><a class="header" href="#改变值">改变值</a></h4>
+<p>无法使用MOV直接操作，但是可以使用JMP间接操作</p>
+<p><strong>JMP 段地址：偏移地址</strong></p>
+<p>比如jmp 2AE3:3;CS=2AE3H,IP=0003H</p>
+<p><strong>若想仅修改 P 的内容，可用形如“jmp 某一合法寄存器”的指令完成</strong></p>
+<h3 id="监测点23"><a class="header" href="#监测点23">监测点2.3</a></h3>
+<p>四次，三条指令就三次，JMP一次，四次
+IP=0000H</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="字与字节"><a class="header" href="#字与字节">字与字节</a></h1>
+<p>QWORD DWORD WORD BYTE bit</p>
+<p>内存单元，字单元</p>
+<p>低地址存低字节，高地址存高字节</p>
+<p>这就是小段存储</p>
+<h1 id="dsaddr"><a class="header" href="#dsaddr">DS:[ADDR]</a></h1>
+<p>mov al,[0]
+其中[0]的意思就是编译地址是0处的内容。</p>
+<p>一般形式是：寄存器:[addr]</p>
+<p>如果没有寄存器，默认 ds:[addr]</p>
+<p>8086CPU一次可以传送16位数据
+<img src="8086-assembly/image-10.png" alt="Alt text" />
+<img src="8086-assembly/image-11.png" alt="Alt text" />
+事实上，只有内存与内存之间不能直接操作。</p>
+<h3 id="监测点31"><a class="header" href="#监测点31">监测点3.1</a></h3>
+<h1 id="栈"><a class="header" href="#栈">栈</a></h1>
+<p>PUSH入栈</p>
+<p>POP出栈</p>
+<p>都是以字为单位的</p>
+<p>比如push ax就是把ax的内容放到栈中</p>
+<h2 id="sssp"><a class="header" href="#sssp">SS:SP</a></h2>
+<p>SS:SP存放了栈顶的地址</p>
+<p>push ax</p>
+<ol>
+<li>sp=sp-2</li>
+<li>ax中的内容放入栈</li>
+</ol>
+<h2 id="操作内容"><a class="header" href="#操作内容">操作内容</a></h2>
+<p>push pop可以操作 寄存器、段寄存器、内存单元</p>
+<h2 id="stack-overflow"><a class="header" href="#stack-overflow">Stack Overflow</a></h2>
+<p>危险的情况，千万小心。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="伪指令"><a class="header" href="#伪指令">伪指令</a></h1>
+<p>伪指令没有对应的机器码，是编译器来执行伪指令</p>
+<h3 id="segment-ends"><a class="header" href="#segment-ends">segment ends</a></h3>
+<p>segment和ends组合使用，用于定义一个段</p>
+<p>格式：</p>
+<pre><code>段名:segment
+·
+·
+·
+段名:ends
+</code></pre>
+<h3 id="end"><a class="header" href="#end">end</a></h3>
+<p>end是一个汇编程序的结束标记</p>
+<p>如果碰到了end，就结束源程序的编译</p>
+<h3 id="assume"><a class="header" href="#assume">assume</a></h3>
+<p>含义是“假设”，假设某一段寄存器和程序中的某一个segment ends定义的段相关联。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="loop"><a class="header" href="#loop">loop</a></h1>
+<p>循环指令，要有标号</p>
+<p><code>CX</code>是存放判定条件的</p>
+<p>inc、dec：自增、自减</p>
+<p>[bx]表示bx之中存储的内容当作偏移地址</p>
+<div style="break-before: page; page-break-before: always;"></div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
