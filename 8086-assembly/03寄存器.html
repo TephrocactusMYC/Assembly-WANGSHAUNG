@@ -85,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">ABOUT Assembly</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../8086-assembly/index.html"><strong aria-hidden="true">1.</strong> Knowledge</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../8086-assembly/01基础知识.html"><strong aria-hidden="true">1.1.</strong> ch1</a></li><li class="chapter-item expanded "><a href="../8086-assembly/02寄存器.html"><strong aria-hidden="true">1.2.</strong> ch2</a></li><li class="chapter-item expanded "><a href="../8086-assembly/03寄存器.html" class="active"><strong aria-hidden="true">1.3.</strong> ch3</a></li><li class="chapter-item expanded "><a href="../8086-assembly/04第一个程序.html"><strong aria-hidden="true">1.4.</strong> ch4</a></li><li class="chapter-item expanded "><a href="../8086-assembly/05[BX]和loop.html"><strong aria-hidden="true">1.5.</strong> ch5</a></li><li class="chapter-item expanded "><a href="../8086-assembly/06段.html"><strong aria-hidden="true">1.6.</strong> ch6</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">ABOUT Assembly</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../8086-assembly/index.html"><strong aria-hidden="true">1.</strong> Knowledge</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../8086-assembly/01基础知识.html"><strong aria-hidden="true">1.1.</strong> ch1</a></li><li class="chapter-item expanded "><a href="../8086-assembly/02寄存器.html"><strong aria-hidden="true">1.2.</strong> ch2</a></li><li class="chapter-item expanded "><a href="../8086-assembly/03寄存器.html" class="active"><strong aria-hidden="true">1.3.</strong> ch3</a></li><li class="chapter-item expanded "><a href="../8086-assembly/04第一个程序.html"><strong aria-hidden="true">1.4.</strong> ch4</a></li><li class="chapter-item expanded "><a href="../8086-assembly/05[BX]和loop.html"><strong aria-hidden="true">1.5.</strong> ch5</a></li><li class="chapter-item expanded "><a href="../8086-assembly/06段.html"><strong aria-hidden="true">1.6.</strong> ch6</a></li><li class="chapter-item expanded "><a href="../8086-assembly/07寻址之前.html"><strong aria-hidden="true">1.7.</strong> ch7</a></li><li class="chapter-item expanded "><a href="../8086-assembly/08寻址及其他.html"><strong aria-hidden="true">1.8.</strong> ch8</a></li><li class="chapter-item expanded "><a href="../8086-assembly/09转移指令.html"><strong aria-hidden="true">1.9.</strong> ch9</a></li><li class="chapter-item expanded "><a href="../8086-assembly/10OVA.html"><strong aria-hidden="true">1.10.</strong> ch10</a></li><li class="chapter-item expanded "><a href="../8086-assembly/11CALL&RET.html"><strong aria-hidden="true">1.11.</strong> ch11</a></li><li class="chapter-item expanded "><a href="../8086-assembly/12乘法与函数.html"><strong aria-hidden="true">1.12.</strong> ch12</a></li><li class="chapter-item expanded "><a href="../8086-assembly/13标志寄存器.html"><strong aria-hidden="true">1.13.</strong> ch13</a></li></ol></li><li class="chapter-item expanded "><a href="../Labs/index.html"><strong aria-hidden="true">2.</strong> Labs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../Labs/lab1.html"><strong aria-hidden="true">2.1.</strong> lab1</a></li><li class="chapter-item expanded "><a href="../Labs/lab2.html"><strong aria-hidden="true">2.2.</strong> lab2</a></li><li class="chapter-item expanded "><a href="../Labs/lab3.html"><strong aria-hidden="true">2.3.</strong> lab3</a></li><li class="chapter-item expanded "><a href="../Labs/lab4.html"><strong aria-hidden="true">2.4.</strong> lab4</a></li><li class="chapter-item expanded "><a href="../Labs/lab5.html"><strong aria-hidden="true">2.5.</strong> lab5</a></li><li class="chapter-item expanded "><a href="../Labs/lab6.html"><strong aria-hidden="true">2.6.</strong> lab6</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -181,11 +181,49 @@
 其中[0]的意思就是编译地址是0处的内容。</p>
 <p>一般形式是：寄存器:[addr]</p>
 <p>如果没有寄存器，默认 ds:[addr]</p>
-<p>8086CPU一次可以传送16位数据
-<img src="image-10.png" alt="Alt text" />
-<img src="image-11.png" alt="Alt text" />
-事实上，只有内存与内存之间不能直接操作。</p>
+<p>8086CPU一次可以传送16位数据</p>
+<p><img src="image-10.png" alt="Alt text" />
+<img src="image-11.png" alt="Alt text" /></p>
+<p>事实上，只有内存与内存之间不能直接操作。</p>
 <h3 id="监测点31"><a class="header" href="#监测点31">监测点3.1</a></h3>
+<pre><code>(1)
+AX=2662H
+BX=E626H
+AX=E626H
+AX=2662H
+BX=D6E6H
+AX=FD48H
+AX=2C14H
+AX=0000H
+AX=00E6H
+BX=0000H
+BX=0026H
+AX=000CH
+(2)
+CS=2000H,IP=0,DS=1000H
+AX=0,BX=0
+
+mov ax,6622H
+CS=2000H IP=3 DS=1000H AX=6622H BX=0000H
+jmp 0ff0:0100
+CS=0ff0H IP=0100 DS=1000H AX=6622H BX=0000H
+mov ax,2000H
+CS=0ff0H IP=0103 DS=1000H AX=2000H BX=0000H
+mov ds,ax
+CS=0ff0H IP=0105 DS=2000H AX=2000H BX=0000H
+mov ax,[0008]
+CS=0ff0H IP=0108 DS=2000H AX=C389H BX=0000H
+mov ax,[0002]
+CS=0ff0H IP=010B DS=2000H AX=EA66H BX=0000H
+(3)
+数据和程序在计算机中都是以二进制的形式存放的，
+在区别程序和数据时，关键是看段地址，如果段地址是ds
+段，说明该内存存放的是数据，如果段地址是cs段，说明该内存
+存放的是指令。
+
+
+
+</code></pre>
 <h1 id="栈"><a class="header" href="#栈">栈</a></h1>
 <p>PUSH入栈</p>
 <p>POP出栈</p>

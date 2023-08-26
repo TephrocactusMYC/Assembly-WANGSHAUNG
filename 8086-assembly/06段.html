@@ -85,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">ABOUT Assembly</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../8086-assembly/index.html"><strong aria-hidden="true">1.</strong> Knowledge</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../8086-assembly/01基础知识.html"><strong aria-hidden="true">1.1.</strong> ch1</a></li><li class="chapter-item expanded "><a href="../8086-assembly/02寄存器.html"><strong aria-hidden="true">1.2.</strong> ch2</a></li><li class="chapter-item expanded "><a href="../8086-assembly/03寄存器.html"><strong aria-hidden="true">1.3.</strong> ch3</a></li><li class="chapter-item expanded "><a href="../8086-assembly/04第一个程序.html"><strong aria-hidden="true">1.4.</strong> ch4</a></li><li class="chapter-item expanded "><a href="../8086-assembly/05[BX]和loop.html"><strong aria-hidden="true">1.5.</strong> ch5</a></li><li class="chapter-item expanded "><a href="../8086-assembly/06段.html" class="active"><strong aria-hidden="true">1.6.</strong> ch6</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">ABOUT Assembly</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../8086-assembly/index.html"><strong aria-hidden="true">1.</strong> Knowledge</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../8086-assembly/01基础知识.html"><strong aria-hidden="true">1.1.</strong> ch1</a></li><li class="chapter-item expanded "><a href="../8086-assembly/02寄存器.html"><strong aria-hidden="true">1.2.</strong> ch2</a></li><li class="chapter-item expanded "><a href="../8086-assembly/03寄存器.html"><strong aria-hidden="true">1.3.</strong> ch3</a></li><li class="chapter-item expanded "><a href="../8086-assembly/04第一个程序.html"><strong aria-hidden="true">1.4.</strong> ch4</a></li><li class="chapter-item expanded "><a href="../8086-assembly/05[BX]和loop.html"><strong aria-hidden="true">1.5.</strong> ch5</a></li><li class="chapter-item expanded "><a href="../8086-assembly/06段.html" class="active"><strong aria-hidden="true">1.6.</strong> ch6</a></li><li class="chapter-item expanded "><a href="../8086-assembly/07寻址之前.html"><strong aria-hidden="true">1.7.</strong> ch7</a></li><li class="chapter-item expanded "><a href="../8086-assembly/08寻址及其他.html"><strong aria-hidden="true">1.8.</strong> ch8</a></li><li class="chapter-item expanded "><a href="../8086-assembly/09转移指令.html"><strong aria-hidden="true">1.9.</strong> ch9</a></li><li class="chapter-item expanded "><a href="../8086-assembly/10OVA.html"><strong aria-hidden="true">1.10.</strong> ch10</a></li><li class="chapter-item expanded "><a href="../8086-assembly/11CALL&RET.html"><strong aria-hidden="true">1.11.</strong> ch11</a></li><li class="chapter-item expanded "><a href="../8086-assembly/12乘法与函数.html"><strong aria-hidden="true">1.12.</strong> ch12</a></li><li class="chapter-item expanded "><a href="../8086-assembly/13标志寄存器.html"><strong aria-hidden="true">1.13.</strong> ch13</a></li></ol></li><li class="chapter-item expanded "><a href="../Labs/index.html"><strong aria-hidden="true">2.</strong> Labs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../Labs/lab1.html"><strong aria-hidden="true">2.1.</strong> lab1</a></li><li class="chapter-item expanded "><a href="../Labs/lab2.html"><strong aria-hidden="true">2.2.</strong> lab2</a></li><li class="chapter-item expanded "><a href="../Labs/lab3.html"><strong aria-hidden="true">2.3.</strong> lab3</a></li><li class="chapter-item expanded "><a href="../Labs/lab4.html"><strong aria-hidden="true">2.4.</strong> lab4</a></li><li class="chapter-item expanded "><a href="../Labs/lab5.html"><strong aria-hidden="true">2.5.</strong> lab5</a></li><li class="chapter-item expanded "><a href="../Labs/lab6.html"><strong aria-hidden="true">2.6.</strong> lab6</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,7 +171,62 @@
 
                 <div id="content" class="content">
                     <main>
-                        
+                        <h1 id="段"><a class="header" href="#段">段</a></h1>
+<p>在assume之中把各个段定义然后分开存储，清晰</p>
+<p>所有的空间应该有系统为我们分配</p>
+<p>伪指令end</p>
+<h2 id="监测点61"><a class="header" href="#监测点61">监测点6.1</a></h2>
+<p>第一问</p>
+<pre><code>assume cs:codesg
+codesg segment
+
+	dw 0123h,0456h,0789h,0abch,0defh,0fedh,0cbah,0987h;ip为0,2,4,6,8..
+
+start:	mov ax,0
+		mov ds,ax;ds设置为0
+		mov bx,0
+
+		mov cx,8;8次循环
+s:		mov ax,[bx]
+    	___;填写的地方,应该填写`mov cs:[bx],ax`
+		add bx,2
+		loop s
+
+		mov ax,4c00h
+		int 21h
+
+codesg ends
+end start
+
+</code></pre>
+<p>第二问</p>
+<pre><code>assume cs:codesg
+
+codesg segment
+	dw 0123h,0456h,0789h,0abch,0defh,0fedh,0cbah,0987h
+	dw 0,0,0,0,0,0,0,0,0,0
+
+start:	mov ax,___;应该填cs,因为栈空间被放到了程序的开头进行声明
+		mov ss,ax;设置ss的值
+		mov sp,___;设置sp的值,应该填24h,因为前面还有8个字,即16字节,栈顶是往高位 数,而且栈里面有10个字节
+
+		mov ax,0;
+		mov ds,ax;ds为0
+		mov bx,0;bx用做下标
+		mov cx,8;循环8次
+
+s:		push [bx];把0:[bx]入栈
+		pop cs:___;这里应该赋值给cs:[bx],所以填写[bx]
+		add bx,2
+		loop s
+
+		mov ax,4c00H
+		int 21h
+
+codesg ends
+end start
+</code></pre>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -180,6 +235,9 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next" href="../8086-assembly/07寻址之前.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -191,6 +249,9 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next" href="../8086-assembly/07寻址之前.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
