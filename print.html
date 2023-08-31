@@ -175,11 +175,14 @@
                         <h1 id="汇编语言学习"><a class="header" href="#汇编语言学习">汇编语言学习</a></h1>
 <p>内容主要来自于王爽的《汇编语言》第四版。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="8086汇编语言学习"><a class="header" href="#8086汇编语言学习">8086汇编语言学习</a></h1>
-<p>[视频【8086汇编语言精讲】]（https://www.bilibili.com/video/BV1CJ411D7yD/?share_source=copy_web&amp;vd_source=89fdd6c33222facf5d82736180e256cc),是B站的一个教学</p>
+<p><a href="https://www.bilibili.com/video/BV1CJ411D7yD/?share_source=copy_web&amp;vd_source=89fdd6c33222facf5d82736180e256cc">视频【8086汇编语言精讲】</a>,是B站的一个教学</p>
 <p>配套王爽的《汇编语言》第四版。</p>
 <p><a href="https://www.bilibili.com/video/BV1mt411R7Xv/?share_source=copy_web&amp;vd_source=89fdd6c33222facf5d82736180e256cc">B站编程讲解【汇编语言从0开始 重制版 自学必备(配套王爽汇编语言第三版或第四版)】</a></p>
 <p><a href="https://blog.csdn.net/Dueser/article/details/120970387">CSDN一个人的课后解答</a></p>
 <p><a href="https://blog.csdn.net/weixin_43362650/article/details/117305075">CSDN上一个人第三版的实验</a></p>
+<p><a href="https://blog.csdn.net/yangzijiangac/article/details/114376550">CSDN上另一个人的答案</a></p>
+<p><a href="https://blog.csdn.net/qq_42777804/article/details/90512159">CSDN上的监测点答案</a></p>
+<p><a href="https://www.cnblogs.com/drperry/p/12380038.html">一个移位的博客，纯字典</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="视频"><a class="header" href="#视频">视频</a></h1>
 <h2 id="从机器语言到汇编语言"><a class="header" href="#从机器语言到汇编语言">从机器语言到汇编语言</a></h2>
 <p>机器语言，过于繁琐和难以编写。</p>
@@ -513,7 +516,115 @@ mov ax,[bx][si].200
 <p>用dx存cx,内层循环结束后，把dx赋值给cx。</p>
 <p>如果没有富余的寄存器怎么办？存在内存空间之中即可！</p>
 <p>内存需要记忆地址，怎么办？<strong>使用栈！</strong></p>
-<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="记录了所有实验的内容"><a class="header" href="#记录了所有实验的内容">记录了所有实验的内容</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bx-si-di-bp"><a class="header" href="#bx-si-di-bp">bx si di bp</a></h1>
+<p>只有这四个寄存器用于寻址</p>
+<p>同时，bi不能与bp相加，si和di相加</p>
+<p>bi\bp和si\di可以相加</p>
+<p><img src="8086-assembly/image-17.png" alt="Alt text" /></p>
+<p><strong>只要有bp,默认段为ss!</strong></p>
+<h1 id="数据位置"><a class="header" href="#数据位置">数据位置</a></h1>
+<p>立即数、寄存器、短地址和偏移地址</p>
+<h1 id="寻址方式"><a class="header" href="#寻址方式">寻址方式</a></h1>
+<ol>
+<li>直接寻址</li>
+<li>寄存器间接寻址</li>
+<li>寄存器相对寻址</li>
+<li>基址变址寻址</li>
+<li>相对基址变址寻址</li>
+</ol>
+<p><img src="8086-assembly/image-18.png" alt="Alt text" /></p>
+<h1 id="指令到底有多长"><a class="header" href="#指令到底有多长">指令到底有多长？</a></h1>
+<p>引入了X prt操作符说明，
+X可以是word byte，
+例如</p>
+<pre><code>mov word ptr ds:[0],1
+inc byte ptr [bx]
+add word ptr [bp],2
+</code></pre>
+<p>push 和 pop永远是对word操作</p>
+<h1 id="寻址方式的综合应用"><a class="header" href="#寻址方式的综合应用">寻址方式的综合应用</a></h1>
+<p><img src="8086-assembly/image-19.png" alt="Alt text" />
+<img src="8086-assembly/image-20.png" alt="Alt text" /></p>
+<p>从汇编可以感受出来，结构体也就是一段内存空间而已，没什么太深的东西。</p>
+<p>我们可以看到，8086CPU 提供的如[bx+si+idata]的寻址方式为结构化数据的处理提供了方便。使得我们可以在编程的时候，从结构化的角度去看待所要处理的数据。从上面可以看到，一个结构化的数据包含了多个数据项，而数据项的类型又不相同，有的是字型数据，有的是字节型数据，有的是数组(字符串)。一般来说，我们可以用[bx+idata+si]的方式来访问结构体中的数据。用 bx 定位整个结构体，用idata 定位结构体中的某一个数据项用 si 定位数组项中的每个元素。为此，汇编语言提供了更为贴切的书写方式，如:[bx].idata、[bx].idata[si] .</p>
+<h1 id="div指令"><a class="header" href="#div指令">Div指令</a></h1>
+<ol>
+<li>除数有8和16位两种，存在一个寄存器或者内存单元之中</li>
+<li>被除数，存在AX或者AX和DX之中。DX存高16位，AX存低16位。只有32位/16位和16位/8位。</li>
+<li>结果，如果除数为8位，AL存商，AH存余数。如果除数为16位，AX存商，DX存余数。</li>
+</ol>
+<h1 id="伪指令dd"><a class="header" href="#伪指令dd">伪指令dd</a></h1>
+<p>定义double word</p>
+<h1 id="伪指令dup"><a class="header" href="#伪指令dup">伪指令dup</a></h1>
+<p>是一个操作符，用来进行数据的重复</p>
+<pre><code>db 3 dup (0)
+</code></pre>
+<p>定义了三个字节，值都是0.相当于</p>
+<pre><code>db 0,0,0
+</code></pre>
+<p><strong>使用方法： dd 重复的次数 dup （重复的数据）</strong></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="转移指令"><a class="header" href="#转移指令">转移指令</a></h1>
+<p>可以修改IP或CS和IP的，统称为转移指令。</p>
+<p>8086CPU 的转移行为有以下几类。</p>
+<ul>
+<li>只修改P 时，称为段内转移，比如: jmp ax。</li>
+<li>同时修改 CS 和P 时，称为段间转移，比如: jmp 1000:0</li>
+</ul>
+<p>由于转移指令对 IP 的修改范围不同，段内转移又分为: 短转移和近转移</p>
+<ul>
+<li>短转移 IPP 的修改范围为-128~127.</li>
+<li>近转移 IP 的修改范围为-32768~32767。</li>
+</ul>
+<p>8086CPU 的转移指令分为以下几类</p>
+<ul>
+<li>无条件转移指令(如: jmmp)</li>
+<li>条件转移指令</li>
+<li>循环指令(如: loop)</li>
+<li>过程</li>
+<li>中断</li>
+</ul>
+<h2 id="offset"><a class="header" href="#offset">offset</a></h2>
+<p>取标号的偏移地址</p>
+<h2 id="jmp"><a class="header" href="#jmp">jmp</a></h2>
+<p>无条件跳转指令，只修改IP，也可以同时修改CS和IP</p>
+<p>jmp必须给出的信息：</p>
+<ol>
+<li>转移的目的地址</li>
+<li>转移的距离</li>
+</ol>
+<h2 id="jmp-short"><a class="header" href="#jmp-short">jmp short</a></h2>
+<p>段内短转移，IP属于-128到127</p>
+<p>CPU在执行jmp指令的时候并不需要转移的目的地址</p>
+<p><img src="8086-assembly/image-21.png" alt="Alt text" /></p>
+<h2 id="jmp-near-ptr"><a class="header" href="#jmp-near-ptr">jmp near ptr</a></h2>
+<p><img src="8086-assembly/image-22.png" alt="Alt text" /></p>
+<h2 id="jmp-far-ptr"><a class="header" href="#jmp-far-ptr">jmp far ptr</a></h2>
+<p><img src="8086-assembly/image-23.png" alt="Alt text" /></p>
+<h2 id="监测点91"><a class="header" href="#监测点91">监测点9.1</a></h2>
+<ol>
+<li>dw 0,0.0</li>
+<li>offset start; cs</li>
+<li>CS=0006,IP=00BE</li>
+</ol>
+<h2 id="jcxz"><a class="header" href="#jcxz">jcxz</a></h2>
+<p>有条件跳转，所有的有条件跳转指令，都是短转移。</p>
+<h2 id="监测点92"><a class="header" href="#监测点92">监测点9.2</a></h2>
+<pre><code>mov ch,0
+mov cl,[bx]
+jxcz ok
+inc bx
+</code></pre>
+<h2 id="loop-1"><a class="header" href="#loop-1">loop</a></h2>
+<p>之前已经讲过了</p>
+<h2 id="监测点93"><a class="header" href="#监测点93">监测点9.3</a></h2>
+<pre><code>inc cx
+</code></pre>
+<h2 id="自动监测"><a class="header" href="#自动监测">自动监测</a></h2>
+<p>如果转移的范围超过了边界，编译器会报错。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ch10"><a class="header" href="#ch10">ch10</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ch11"><a class="header" href="#ch11">ch11</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ch12"><a class="header" href="#ch12">ch12</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="记录了所有实验的内容"><a class="header" href="#记录了所有实验的内容">记录了所有实验的内容</a></h1>
 <p>前面的部分实验由于仅仅是调试和学习，因此不记录具体细节。</p>
 <p>所有编程作业都给出完整代码。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="debug"><a class="header" href="#debug">Debug</a></h1>

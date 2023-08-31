@@ -171,7 +171,65 @@
 
                 <div id="content" class="content">
                     <main>
-                        
+                        <h1 id="转移指令"><a class="header" href="#转移指令">转移指令</a></h1>
+<p>可以修改IP或CS和IP的，统称为转移指令。</p>
+<p>8086CPU 的转移行为有以下几类。</p>
+<ul>
+<li>只修改P 时，称为段内转移，比如: jmp ax。</li>
+<li>同时修改 CS 和P 时，称为段间转移，比如: jmp 1000:0</li>
+</ul>
+<p>由于转移指令对 IP 的修改范围不同，段内转移又分为: 短转移和近转移</p>
+<ul>
+<li>短转移 IPP 的修改范围为-128~127.</li>
+<li>近转移 IP 的修改范围为-32768~32767。</li>
+</ul>
+<p>8086CPU 的转移指令分为以下几类</p>
+<ul>
+<li>无条件转移指令(如: jmmp)</li>
+<li>条件转移指令</li>
+<li>循环指令(如: loop)</li>
+<li>过程</li>
+<li>中断</li>
+</ul>
+<h2 id="offset"><a class="header" href="#offset">offset</a></h2>
+<p>取标号的偏移地址</p>
+<h2 id="jmp"><a class="header" href="#jmp">jmp</a></h2>
+<p>无条件跳转指令，只修改IP，也可以同时修改CS和IP</p>
+<p>jmp必须给出的信息：</p>
+<ol>
+<li>转移的目的地址</li>
+<li>转移的距离</li>
+</ol>
+<h2 id="jmp-short"><a class="header" href="#jmp-short">jmp short</a></h2>
+<p>段内短转移，IP属于-128到127</p>
+<p>CPU在执行jmp指令的时候并不需要转移的目的地址</p>
+<p><img src="image-21.png" alt="Alt text" /></p>
+<h2 id="jmp-near-ptr"><a class="header" href="#jmp-near-ptr">jmp near ptr</a></h2>
+<p><img src="image-22.png" alt="Alt text" /></p>
+<h2 id="jmp-far-ptr"><a class="header" href="#jmp-far-ptr">jmp far ptr</a></h2>
+<p><img src="image-23.png" alt="Alt text" /></p>
+<h2 id="监测点91"><a class="header" href="#监测点91">监测点9.1</a></h2>
+<ol>
+<li>dw 0,0.0</li>
+<li>offset start; cs</li>
+<li>CS=0006,IP=00BE</li>
+</ol>
+<h2 id="jcxz"><a class="header" href="#jcxz">jcxz</a></h2>
+<p>有条件跳转，所有的有条件跳转指令，都是短转移。</p>
+<h2 id="监测点92"><a class="header" href="#监测点92">监测点9.2</a></h2>
+<pre><code>mov ch,0
+mov cl,[bx]
+jxcz ok
+inc bx
+</code></pre>
+<h2 id="loop"><a class="header" href="#loop">loop</a></h2>
+<p>之前已经讲过了</p>
+<h2 id="监测点93"><a class="header" href="#监测点93">监测点9.3</a></h2>
+<pre><code>inc cx
+</code></pre>
+<h2 id="自动监测"><a class="header" href="#自动监测">自动监测</a></h2>
+<p>如果转移的范围超过了边界，编译器会报错。</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

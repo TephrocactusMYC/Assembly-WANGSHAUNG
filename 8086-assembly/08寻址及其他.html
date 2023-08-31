@@ -171,7 +171,54 @@
 
                 <div id="content" class="content">
                     <main>
-                        
+                        <h1 id="bx-si-di-bp"><a class="header" href="#bx-si-di-bp">bx si di bp</a></h1>
+<p>只有这四个寄存器用于寻址</p>
+<p>同时，bi不能与bp相加，si和di相加</p>
+<p>bi\bp和si\di可以相加</p>
+<p><img src="image-17.png" alt="Alt text" /></p>
+<p><strong>只要有bp,默认段为ss!</strong></p>
+<h1 id="数据位置"><a class="header" href="#数据位置">数据位置</a></h1>
+<p>立即数、寄存器、短地址和偏移地址</p>
+<h1 id="寻址方式"><a class="header" href="#寻址方式">寻址方式</a></h1>
+<ol>
+<li>直接寻址</li>
+<li>寄存器间接寻址</li>
+<li>寄存器相对寻址</li>
+<li>基址变址寻址</li>
+<li>相对基址变址寻址</li>
+</ol>
+<p><img src="image-18.png" alt="Alt text" /></p>
+<h1 id="指令到底有多长"><a class="header" href="#指令到底有多长">指令到底有多长？</a></h1>
+<p>引入了X prt操作符说明，
+X可以是word byte，
+例如</p>
+<pre><code>mov word ptr ds:[0],1
+inc byte ptr [bx]
+add word ptr [bp],2
+</code></pre>
+<p>push 和 pop永远是对word操作</p>
+<h1 id="寻址方式的综合应用"><a class="header" href="#寻址方式的综合应用">寻址方式的综合应用</a></h1>
+<p><img src="image-19.png" alt="Alt text" />
+<img src="image-20.png" alt="Alt text" /></p>
+<p>从汇编可以感受出来，结构体也就是一段内存空间而已，没什么太深的东西。</p>
+<p>我们可以看到，8086CPU 提供的如[bx+si+idata]的寻址方式为结构化数据的处理提供了方便。使得我们可以在编程的时候，从结构化的角度去看待所要处理的数据。从上面可以看到，一个结构化的数据包含了多个数据项，而数据项的类型又不相同，有的是字型数据，有的是字节型数据，有的是数组(字符串)。一般来说，我们可以用[bx+idata+si]的方式来访问结构体中的数据。用 bx 定位整个结构体，用idata 定位结构体中的某一个数据项用 si 定位数组项中的每个元素。为此，汇编语言提供了更为贴切的书写方式，如:[bx].idata、[bx].idata[si] .</p>
+<h1 id="div指令"><a class="header" href="#div指令">Div指令</a></h1>
+<ol>
+<li>除数有8和16位两种，存在一个寄存器或者内存单元之中</li>
+<li>被除数，存在AX或者AX和DX之中。DX存高16位，AX存低16位。只有32位/16位和16位/8位。</li>
+<li>结果，如果除数为8位，AL存商，AH存余数。如果除数为16位，AX存商，DX存余数。</li>
+</ol>
+<h1 id="伪指令dd"><a class="header" href="#伪指令dd">伪指令dd</a></h1>
+<p>定义double word</p>
+<h1 id="伪指令dup"><a class="header" href="#伪指令dup">伪指令dup</a></h1>
+<p>是一个操作符，用来进行数据的重复</p>
+<pre><code>db 3 dup (0)
+</code></pre>
+<p>定义了三个字节，值都是0.相当于</p>
+<pre><code>db 0,0,0
+</code></pre>
+<p><strong>使用方法： dd 重复的次数 dup （重复的数据）</strong></p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
