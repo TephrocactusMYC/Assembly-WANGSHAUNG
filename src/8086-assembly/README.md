@@ -1,5 +1,5 @@
 # 8086汇编语言学习
-[视频【8086汇编语言精讲】]（https://www.bilibili.com/video/BV1CJ411D7yD/?share_source=copy_web&vd_source=89fdd6c33222facf5d82736180e256cc),是B站的一个教学
+[视频【8086汇编语言精讲】](https://www.bilibili.com/video/BV1CJ411D7yD/?share_source=copy_web&vd_source=89fdd6c33222facf5d82736180e256cc),是B站的一个教学
 
 配套王爽的《汇编语言》第四版。
 
@@ -9,5 +9,9 @@
 
 [CSDN上一个人第三版的实验](https://blog.csdn.net/weixin_43362650/article/details/117305075)
 
+[CSDN上另一个人的答案](https://blog.csdn.net/yangzijiangac/article/details/114376550)
 
+[CSDN上的监测点答案](https://blog.csdn.net/qq_42777804/article/details/90512159)
+
+[一个移位的博客，纯字典](https://www.cnblogs.com/drperry/p/12380038.html)
 
