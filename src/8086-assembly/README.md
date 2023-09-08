@@ -15,3 +15,5 @@
 
 [一个移位的博客，纯字典](https://www.cnblogs.com/drperry/p/12380038.html)
 
+[一个CSDN博主的专栏，很全的检测点答案和部分实验答案](https://blog.csdn.net/skies_/category_11494369.html?spm=1001.2014.3001.5482)
+
