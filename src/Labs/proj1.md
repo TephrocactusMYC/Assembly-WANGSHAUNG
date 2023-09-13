@@ -137,7 +137,10 @@ end start
 ![Alt text](image-33.png)
 
 可见改的没毛病。
+
 ## 答案
+![Alt text](image-34.png)
+惨痛，用了个缓冲区，忘了清空了,注意那个854，那是错误答案。
 ```
 assume cs:code,ss:stack
 data segment
@@ -205,7 +208,7 @@ start:
         ;底下就是新的内容了
         mov ax,data
         mov ds,ax
-        ;ds绑定data
+        ;ds绑定table
         mov ax,table
         mov es,ax
         ;es绑table
@@ -249,7 +252,7 @@ start:
         call dtoc
         ;人均
 
-        ；其实上边这几个部分，精心设计一下能写成循环，代码能好看一点点，但是太麻烦了，不写了。
+        ;其实上边这几个部分，精心设计一下能写成循环，代码能好看一点点，但是太麻烦了，不写了。
 
 
         mov si,0    ;ds:si指向字符串首地址
@@ -258,6 +261,14 @@ start:
         mov dl,3    ;在屏幕第几列开始显示
         mov cl,2    ;显示的字符的颜色
         call show_str
+
+        ;这里还要注意，每次展示以后都要重新清空
+        mov cx,24
+        SUB SI,si
+    clearbuf:
+        mov BYTE ptr ds:[si],20h
+        INC si
+        loop clearbuf
 
         sub di,13
         add di,10H
@@ -368,7 +379,7 @@ change: mov cl,DS:[si]
 code ends
 end start
 ```
-![Alt text](image-34.png)
+![Alt text](image-39.png)
 
 成功！
 
